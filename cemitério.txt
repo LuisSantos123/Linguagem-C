@@ -1,0 +1,170 @@
+/*7- TEMA: Sistema para cemitério
+Criar vetor de estrutura para cadastrar 1000 defuntos (número da lápide, nome do defunto,
+status (Pago – P, Não PAGO - N))
+Criar menu com as seguintes funcionalidades:
+1. Cadastrar defunto: cada defunto deverá ter um código único. O status inicial deverá
+ser não pago
+2. Exibir defuntos: exibir todas as informações de todos os defuntos cadastrados
+3. Pesquisar defunto: procurar o defunto pelo número da lápide. Se encontrar, mostrar
+todas as informações referentes ao defunto.
+4. Excluir defunto: procurar o defunto pelo número da lápide. Se encontrar, exibir todos
+os dados do defunto e perguntar se o usuário deseja realmente excluir o mesmo. Se a
+resposta for positiva, excluir o defunto e reorganizar a lista.
+5. Registrar Pagamento: procurar o defunto pelo número da lápide. Se encontrar,
+mostrar todas as informações referentes ao defunto. Se o status for não pago,
+perguntar ao usuário se ele deseja efetuar o pagamento. Caso sim, alterar o status
+para PAGO e registar no caixa da empresa.
+6. Caixa: Exibir todas as lápides que estão com status PAGO e ao final o total recebido. */
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<conio.h>
+#include<ctype.h>
+#include<string.h>
+#include<locale.h>
+#define DEFUNTOS 10
+
+typedef struct{
+	char nome[100];
+	int numLapide;
+	bool status;
+	int codigoUnico;
+		
+}defunto;
+
+
+typedef struct{
+	defunto dados[DEFUNTOS];
+	int controle;
+	int codigo;
+	bool status;
+}lista;
+
+// protótipos
+
+void cadastra(lista *pCadastro);
+void exibir(lista *pCadastro);
+int pesquisa(lista *pCadastro);
+void excluir(lista *pCadastro);
+main(){
+	setlocale(LC_ALL,"portuguese");
+	lista cadastro;
+	cadastro.controle=0;
+	cadastro.codigo=666;
+	cadastro.status=false;
+	int escolha;
+	do{
+		printf("\n1 - Cadastrar");
+		printf("\n2 - Exibir");
+		printf("\n3 - Pesquisar.");
+		printf("\n4 - Excluir.");
+		printf("\n5 - Registrar Pagamento ");
+		printf("\n6 - Caixa.");
+		printf("\n7 - Sair ==>.");
+		scanf("%i",&escolha);
+		switch(escolha){
+			case 1:
+				cadastra(&cadastro);
+				break;
+			case 2:
+				exibir(&cadastro);
+				break;
+			case 3:
+				pesquisa(&cadastro);		
+				break;
+			case 4:
+				excluir(&cadastro);		
+				break;
+			default: printf("\n\t ==> ERRO!!");
+		}
+	}while(escolha!=5);
+	
+	
+}
+
+void cadastra(lista *pCadastro){
+	if(pCadastro->controle==DEFUNTOS) printf("\n\t Sem espaço!!!\n");
+ 	else{
+ 		defunto aux;
+ 		pCadastro->status;
+ 		printf("Informe o nome do defunto: ");
+ 		fflush(stdin);
+ 		gets(aux.nome);
+ 		printf("\nInforme o numero da lápide: ");
+ 		scanf("%i",&aux.numLapide);
+ 		aux.codigoUnico=pCadastro->codigo;
+ 		pCadastro->codigo++;
+		 pCadastro->dados[pCadastro->controle]=aux;
+ 		pCadastro->controle++;
+ 		
+ 		
+ 		printf("\n Cadastro realizado com sucesso!\n");
+ 	
+ 	}	
+	
+}
+
+void exibir(lista *pCadastro){
+	if(pCadastro->controle==0) printf("\n Ninguem!!!\n");
+	else{
+		defunto aux;
+		aux.status=pCadastro->status;
+		for(int x=0;x<pCadastro->controle;x++){
+			printf("\nNome do Defunto: %s",pCadastro->dados[x].nome);
+			printf("\n Numero da Lápide: %i",pCadastro->dados[x].numLapide);
+			printf("\n O Código único é: %i",pCadastro->dados[x].codigoUnico);
+			if(aux.status==false){
+			printf("\n O Status do pagamento é: Não pago");
+			}else{
+				printf("\n O Código único é: Pago");
+			}
+			
+		}
+		
+	}
+	
+	
+}
+
+int pesquisa(lista *pCadastro){
+	if(pCadastro->controle==0) printf("\n Ninguem!!!\n");
+	else{
+		int retorno=-1;
+		defunto aux;
+		printf("Digite o numero da lápide para efetuar a pesquisa:");
+		scanf("%i",&aux.numLapide);
+		for(int x=0;x<pCadastro->controle;x++){
+		if(aux.numLapide==pCadastro->dados[x].numLapide){
+				printf("\nNome do Defunto: %s",pCadastro->dados[x].nome);
+				retorno=x;
+				break;
+					
+		}
+
+}
+return retorno;
+}
+}
+void excluir(lista *pCadastro){
+	int retorno;
+	char resp;
+	retorno =pesquisa(pCadastro);
+	if(retorno==-1) printf("Nada");
+	else{
+		printf("Está certo DISSO S-sim ou N-não");
+		fflush(stdin);
+		resp=toupper(resp);
+		scanf("%c",&resp);
+		if(resp=='S'){
+		
+		for(int x=retorno;x<pCadastro->controle;x++){
+			pCadastro->dados[x]=pCadastro->dados[x+1];
+			
+			}
+			}pCadastro->controle--;
+			
+			//mensagem
+			
+	}
+	
+}
