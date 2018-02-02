@@ -1,0 +1,166 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <locale.h>
+#include <string.h>
+#define TAM 1000
+#define SALARIO 937.0
+typedef struct{
+	char nome[100];
+	int idade;
+	char sexo;
+	float salario;
+	char escola;	
+}pessoa;
+
+typedef struct{
+	pessoa dados[TAM];
+	int controle;
+}censo;
+
+void cadastrar(censo *cadastro);
+void listar(censo *cadastro);
+void ensinoMulher(censo *cadastro);
+void maiorIdade(censo *cadastro);
+void renda(censo *cadastro);
+main(){
+	setlocale(LC_ALL,"");
+	int menu;
+	censo cadastro;
+	cadastro.controle=0;
+	do{
+		printf("\n 1 - cadastrar");
+		printf("\n 2 - listar");
+		printf("\n 3 - Ensino Superior Mulheres");
+		printf("\n 4 - Maiores de Idade");
+		printf("\n 5 - Renda");
+		printf("\n 0 - Sair ==> ");
+		scanf("%i",&menu);
+		switch(menu){
+			case 1:
+				cadastrar(&cadastro);
+			break;
+			case 2:
+				listar(&cadastro);
+			break;
+			case 3:
+				ensinoMulher(&cadastro);
+			break;
+			case 4:
+				maiorIdade(&cadastro);
+			break;
+			case 5:
+				renda(&cadastro);
+			break;
+			case 0:
+			break;
+			default: printf("\n ERRO NA ESCOLHA!! \n");
+		}
+		
+		
+		
+	}while(menu!=0);
+	
+}
+void cadastrar(censo *cadastro){
+	if(cadastro->controle==TAM) printf("\n LISTA CHEIA!!\n");
+	else{
+		pessoa aux;
+		printf("Digite o nome: ");
+		fflush(stdin);
+		gets(aux.nome);
+		do{
+			printf("Informe a idade: ");
+			scanf("%i",&aux.idade);
+			if(aux.idade<=0) printf("\n\t ==>  Digite a idade novamente!\n");
+		}while(aux.idade<=0);
+		do{
+			printf("Informe o sexo: M ou F  ==> ");
+			fflush(stdin);
+			scanf("%c",&aux.sexo);
+			aux.sexo = toupper(aux.sexo);
+			if(aux.sexo!='F' && aux.sexo!='M' ) printf("\n\t ==>  Escolha Inválida!\n");
+		}while(aux.sexo!='F' && aux.sexo!='M');
+		do{
+			printf("Informe o salário: ");
+			scanf("%f",&aux.salario);
+			if(aux.salario<=0) printf("\n\t ==>  Salário inválido!\n");
+		}while(aux.salario<=0);
+		do{
+			printf("Informe a escolaridade: F, M ou S  ==> ");
+			fflush(stdin);
+			scanf("%c",&aux.escola);
+			aux.escola = toupper(aux.escola);
+			if(aux.escola!='F' && aux.escola!='M' && aux.escola!='S' ) printf("\n\t ==>  Escolha Inválida!\n");
+		}while(aux.escola!='F' && aux.escola!='M' && aux.escola!='S' );
+		cadastro->dados[cadastro->controle]=aux;
+		cadastro->controle++;
+		printf("\n\t ==> Cadsatrado com sucesso!\n");
+	}
+}
+
+void listar(censo *cadastro){
+	if(cadastro->controle==0) printf("\n\t ==> Cadastro Vazio!!\n");
+	else{
+		for(int x=0;x<cadastro->controle;x++){
+			printf("\nNome: %s",cadastro->dados[x].nome);
+			printf("\nIdade: %i",cadastro->dados[x].idade);
+			printf("\nSexo: %c",cadastro->dados[x].sexo);
+			printf("\nSalario: %.2f",cadastro->dados[x].salario);
+			printf("\nEscolaridade: %c",cadastro->dados[x].escola);
+			printf("\n ***************************************\n");
+		}
+	}
+}
+
+void ensinoMulher(censo *cadastro){
+	if(cadastro->controle==0) printf("\n\t ==> Cadastro Vazio!!\n");
+	else{
+		int cont=0;
+		for(int x=0;x<cadastro->controle;x++){
+			if(cadastro->dados[x].escola=='S' && cadastro->dados[x].sexo=='F'){
+				printf("\nNome: %s",cadastro->dados[x].nome);
+				printf("\n ***************************************\n");
+				cont++;
+			}
+		}
+		if(cont==0) printf("\n\t ==> Sem mulheres com ensino superior! \n");
+		else printf("\n\t ==> Existem %i mulheres com ensino superior! \n",cont);
+	}
+	
+}
+
+void maiorIdade(censo *cadastro){
+	if(cadastro->controle==0) printf("\n\t ==> Cadastro Vazio!!\n");
+	else{
+		int cont=0;
+		float percentual=0;
+		for(int x=0;x<cadastro->controle;x++){
+			if(cadastro->dados[x].idade>=18){
+				cont++;
+			}
+		}
+		percentual=((float)cont*100/(float)cadastro->controle);
+		if(cont==0) printf("\n\t Nenhum menor de idade!\n");
+		else{
+			printf("\n Existem %i maiores de idade.\n",cont);
+			printf("\n Percentual: %.2f %%.\n",percentual);
+		}
+	}
+}
+
+void renda(censo *cadastro){
+	if(cadastro->controle==0) printf("\n\t ==> Cadastro Vazio!!\n");
+	else{
+		int cont;
+		for(int x=0;x<cadastro->controle;x++){
+		 if(cadastro->dados[x].salario>(SALARIO*2)) cont++;	
+		}
+		if(cont==0) printf("\n\t Ninguem ganha mais que 2 minimos!\n");
+		else{
+			printf("\n Existem %i pessoas que ganham mais que 2 minimos.\n",cont);
+			printf("\n Percentual: %.2f %%.\n",(float)cont*100/cadastro->controle);
+		}
+	}
+}
